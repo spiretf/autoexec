@@ -4,7 +4,7 @@ Automatically execute the correct config for a map
 
 ## Installation
 
-
+[Download Plugin](https://github.com/spiretf/autoexec/raw/master/plugin/autoexec.smx)
 
 ## Usage
 
