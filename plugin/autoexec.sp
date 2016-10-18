@@ -15,9 +15,11 @@ new StringMap:mapOverwriteMap;
 new StringMap:mapTypeMap;
 new StringMap:gameModeMap;
 new StringMap:configOverwriteMap;
+bool inAutoExec = false;
 
 new Handle:CvarLeague = INVALID_HANDLE;
 new Handle:CvarMode = INVALID_HANDLE;
+new Handle:CvarAutoset = INVALID_HANDLE;
 
 public OnPluginStart() {
 	mapPrefixMap = new StringMap();
@@ -28,9 +30,11 @@ public OnPluginStart() {
 
 	CvarLeague = CreateConVar("sm_autoexec_league", "ugc", "league to execute the configs for (ugc or etf2l)", FCVAR_PROTECTED);
 	CvarMode = CreateConVar("sm_autoexec_mode", "9v9", "gamemode to execute the config for (9v9, 6v6 or 4v4)", FCVAR_PROTECTED);
+	CvarAutoset = CreateConVar("sm_autoexec_autoset", "true", "try to set league and mode when a config is manually loaded (true or false)", FCVAR_PROTECTED);
 
 	RegServerCmd("sm_autoexec", AutoExec, "Execute the config for the current map and select league and gamemode");
 	RegServerCmd("sm_getexec", GetExec, "Get the name of the config for a specific map");
+	RegServerCmd("exec", HandleExecAction);
 	
 	mapTypeMap.SetString("5cp", "standard");
 	
@@ -57,6 +61,43 @@ public OnMapStart() {
 	GetConfig(map, config);
 	
 	ExecCFG(config);
+}
+
+public Action:HandleExecAction(args) {
+	new String:cfg[128];
+	GetCmdArg(1, cfg, sizeof(cfg));
+	decl String:autoset[8];
+	GetConVarString(CvarAutoset, autoset, sizeof(autoset));
+	if (strncmp("true", autoset, sizeof(autoset)) != 0 || inAutoExec) {
+		return Plugin_Continue;
+	}
+
+	if (StrContains(cfg, "etf2l_") == 0) {
+		PrintToChatAll("Setting league to etf2l");
+		SetConVarString(CvarLeague, "etf2l");
+	}
+
+	if (StrContains(cfg, "ugc_") == 0) {
+		PrintToChatAll("Setting league to ugc");
+		SetConVarString(CvarLeague, "ugc");
+	}
+
+	if ((StrContains(cfg, "9v9_") > 0) || (StrContains(cfg, "hl_") > 0)) {
+		PrintToChatAll("Setting game mode to 9v9");
+		SetConVarString(CvarMode, "9v9");
+	}
+
+	if (StrContains(cfg, "6v6_") > 0) {
+		PrintToChatAll("Setting game mode to 6v6");
+		SetConVarString(CvarMode, "6v6");
+	}
+
+	if (StrContains(cfg, "4v4_") > 0) {
+		PrintToChatAll("Setting game mode to 4v4");
+		SetConVarString(CvarMode, "4v4");
+	}
+
+	return Plugin_Continue;
 }
 
 public Action:GetExec(args) {
@@ -155,5 +196,12 @@ public GetMapType(String:map[128], String:mapType[128]) {
 public ExecCFG(String:cfg[128]) {
 	decl String:command[256];
 	Format(command, sizeof(command), "exec %s", cfg);
+	// dont trigger autoset
+	inAutoExec = true;
 	ServerCommand(command, sizeof(command));
+	CreateTimer(1.0, clearInAutoExec); // give the config time to load before clearing
+}
+
+public Action clearInAutoExec(Handle timer) {
+	inAutoExec = false;
 }
