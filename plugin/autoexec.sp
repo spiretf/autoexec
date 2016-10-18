@@ -40,6 +40,8 @@ public OnPluginStart() {
 	mapPrefixMap.SetString("ctf_", "ctf");
 
 	configOverwriteMap.SetString("ultiduo_", "etf2l_ultiduo");
+	configOverwriteMap.SetString("bball_", "etf2l_bball");
+	configOverwriteMap.SetString("ctf_bball", "etf2l_bball");
 	
 	mapOverwriteMap.SetString("cp_steel", "stopwatch");
 	mapOverwriteMap.SetString("cp_gravelpit", "stopwatch");
