@@ -35,6 +35,7 @@ public OnPluginStart() {
 	mapPrefixMap.SetString("cp_", "5cp");
 	mapPrefixMap.SetString("kot", "koth");
 	mapPrefixMap.SetString("ctf", "ctf");
+	mapPrefixMap.SetString("ult", "ultiduo");
 	
 	mapOverwriteMap.SetString("cp_steel", "stopwatch");
 	mapOverwriteMap.SetString("cp_gravelpit", "stopwatch");
@@ -49,7 +50,7 @@ public OnMapStart() {
 	ExecCFG(config);
 }
 
-public Action:AutoExec(args) {	
+public Action:AutoExec(args) {
 	decl String:config[128];
 	GetConfig(config);
 	
@@ -116,8 +117,7 @@ public GetMapType(String:mapType[32]) {
 	return;
 }
 
-public ExecCFG(String:cfg[128])
-{
+public ExecCFG(String:cfg[128]) {
 	decl String:command[256];
 	Format(command, sizeof(command), "exec %s", cfg);
 	ServerCommand(command, sizeof(command));
