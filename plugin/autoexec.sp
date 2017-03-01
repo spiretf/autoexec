@@ -52,6 +52,7 @@ public OnPluginStart() {
 	mapOverwriteMap.SetString("cp_hadal", "stopwatch");
 	
 	gameModeMap.SetString("9v9", "hl");
+	gameModeMap.SetString("6v6", "6v");
 }
 
 public OnMapStart() {
@@ -92,6 +93,11 @@ public Action:HandleExecAction(args) {
 		SetConVarString(CvarMode, "6v6");
 	}
 
+	if (StrContains(cfg, "6v_") > 0) {
+		PrintToChatAll("Setting game mode to 6v6");
+		SetConVarString(CvarMode, "6v6");
+	}
+	
 	if (StrContains(cfg, "4v4_") > 0) {
 		PrintToChatAll("Setting game mode to 4v4");
 		SetConVarString(CvarMode, "4v4");
