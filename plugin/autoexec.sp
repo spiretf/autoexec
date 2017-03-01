@@ -6,7 +6,7 @@ public Plugin:myinfo = {
 	name = "autoexec",
 	author = "Icewind",
 	description = "Automatically execute the right config for a map",
-	version = "0.2",
+	version = "0.3",
 	url = "https://spire.tf"
 };
 
