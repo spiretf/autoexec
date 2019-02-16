@@ -50,6 +50,7 @@ public OnPluginStart() {
 	mapOverwriteMap.SetString("cp_steel", "stopwatch");
 	mapOverwriteMap.SetString("cp_gravelpit", "stopwatch");
 	mapOverwriteMap.SetString("cp_hadal", "stopwatch");
+	mapOverwriteMap.SetString("cp_alloy", "stopwatch");
 	
 	gameModeMap.SetString("9v9", "hl");
 	gameModeMap.SetString("6v6", "6v");
