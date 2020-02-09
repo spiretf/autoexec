@@ -29,10 +29,10 @@ public OnPluginStart() {
 	configOverwriteMap = new StringMap();
 
 	CvarLeague = CreateConVar("sm_autoexec_league", "ugc", "league to execute the configs for (ugc or etf2l)", FCVAR_PROTECTED);
-	CvarMode = CreateConVar("sm_autoexec_mode", "9v9", "gamemode to execute the config for (9v9, 6v6 or 4v4)", FCVAR_PROTECTED);
+	CvarMode = CreateConVar("sm_autoexec_mode", "9v9", "game mode to execute the config for (9v9, 6v6 or 4v4)", FCVAR_PROTECTED);
 	CvarAutoset = CreateConVar("sm_autoexec_autoset", "true", "try to set league and mode when a config is manually loaded (true or false)", FCVAR_PROTECTED);
 
-	RegServerCmd("sm_autoexec", AutoExec, "Execute the config for the current map and select league and gamemode");
+	RegServerCmd("sm_autoexec", AutoExec, "Execute the config for the current map and select league and game mode");
 	RegServerCmd("sm_getexec", GetExec, "Get the name of the config for a specific map");
 	RegServerCmd("exec", HandleExecAction);
 	
