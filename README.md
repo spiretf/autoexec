@@ -8,7 +8,9 @@ Automatically execute the correct config for a map
 
 ## Usage
 
-The plugin automatically executes the config while loading a map
+The plugin automatically executes the config while loading a map.
+
+If a team readies up without the expected number of players for the active config, a warning will be shown.
 
 ### Configuration
 
@@ -18,4 +20,4 @@ The plugin automatically executes the config while loading a map
 
 ### Manually execute the config
 
-You can manually load the selected config using the `sm_autoexec` server command
+You can manually load the selected config using the `sm_autoexec` server command.
