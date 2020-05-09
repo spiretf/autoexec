@@ -1,5 +1,6 @@
 #pragma semicolon 1
 #include <sourcemod>
+#include <sdktools>
 #include <tf2>
 
 public Plugin:myinfo = {
@@ -16,6 +17,7 @@ new StringMap:mapTypeMap;
 new StringMap:gameModeMap;
 new StringMap:configOverwriteMap;
 bool inAutoExec = false;
+bool[4] warned = {false, false, false, false}; // size 4 so we can use team indexes
 
 new Handle:CvarLeague = INVALID_HANDLE;
 new Handle:CvarMode = INVALID_HANDLE;
@@ -54,6 +56,8 @@ public OnPluginStart() {
 	
 	gameModeMap.SetString("9v9", "hl");
 	gameModeMap.SetString("6v6", "6v");
+
+	HookEvent("tournament_stateupdate", OnReadyUp, EventHookMode_Post);
 }
 
 public OnMapStart() {
@@ -70,6 +74,10 @@ public Action:HandleExecAction(args) {
 	GetCmdArg(1, cfg, sizeof(cfg));
 	decl String:autoset[8];
 	GetConVarString(CvarAutoset, autoset, sizeof(autoset));
+
+	warned[2] = false;
+	warned[3] = false;
+
 	if (strncmp("true", autoset, sizeof(autoset)) != 0 || inAutoExec) {
 		return Plugin_Continue;
 	}
@@ -211,4 +219,36 @@ public ExecCFG(String:cfg[128]) {
 
 public Action clearInAutoExec(Handle timer) {
 	inAutoExec = false;
+}
+
+public void OnReadyUp(Event event, const String:name[], bool:dontBroadcast) {
+
+    bool redReady = GameRules_GetProp("m_bTeamReady", 1, .element=2) != 0;
+    bool blueReady = GameRules_GetProp("m_bTeamReady", 1, .element=3) != 0;
+
+    if (redReady) {
+        CheckPlayerCount(2);
+    }
+    if (blueReady) {
+        CheckPlayerCount(3);
+    }
+}
+
+public void CheckPlayerCount(int team) {
+    int playerCount = GetTeamClientCount(team);
+
+    decl String:gamemode[8];
+    GetConVarString(CvarMode, gamemode, sizeof(gamemode));
+
+    if (!warned[team]) {
+        if (strcmp(gamemode, "9v9") && playerCount != 9) {
+            warned[team] = true;
+            PrintToChatAll("Warning, config is set to 9v9 but you readied up with %d players", playerCount);
+            GameRules_SetProp("m_bTeamReady", 0, _ , team, true);
+        } else if (strcmp(gamemode, "6v6") && playerCount != 6) {
+            warned[team] = true;
+            GameRules_SetProp("m_bTeamReady", 0, _ , team, true);
+            PrintToChatAll("Warning, config is set to 6v6 but you readied up with %d players", playerCount);
+        }
+    }
 }
