@@ -241,11 +241,11 @@ public void CheckPlayerCount(int team) {
     GetConVarString(CvarMode, gamemode, sizeof(gamemode));
 
     if (!warned[team]) {
-        if (strcmp(gamemode, "9v9") && playerCount != 9) {
+        if (strcmp(gamemode, "9v9") == 0 && playerCount != 9) {
             warned[team] = true;
             PrintToChatAll("Warning, config is set to 9v9 but you readied up with %d players", playerCount);
             GameRules_SetProp("m_bTeamReady", 0, _ , team, true);
-        } else if (strcmp(gamemode, "6v6") && playerCount != 6) {
+        } else if (strcmp(gamemode, "6v6") == 0 && playerCount != 6) {
             warned[team] = true;
             GameRules_SetProp("m_bTeamReady", 0, _ , team, true);
             PrintToChatAll("Warning, config is set to 6v6 but you readied up with %d players", playerCount);
