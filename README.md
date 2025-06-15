@@ -1,3 +1,5 @@
+# Moved to https://codeberg.org/spire/autoexec
+
 # AutoExec
 
 Automatically execute the correct config for a map
